@@ -145,7 +145,7 @@ with result_pane:
     if all_pages is not None:
         for p, page in enumerate(all_pages):
             if translate:
-                if p > 0:
+                if p >= 0:
                     page = make_safe(page)
                     prompt = PROMPT.format(sentences = page)
                     print(prompt)
