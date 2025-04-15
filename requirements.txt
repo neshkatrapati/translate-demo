@@ -1,0 +1,7 @@
+mistralai==1.6.0
+openai==1.74.0
+requests==2.32.3
+streamlit==1.44.1
+streamlit-pdf-viewer==0.0.22
+rich
+more-itertools

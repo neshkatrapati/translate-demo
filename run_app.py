@@ -7,9 +7,10 @@ import json
 from openai import OpenAI
 
 
-config = json.loads(open('config.json').read())
-api_key = config["mistral_api_key"]
-openai_api_key = config["openai_api_key"]
+#config = json.loads(open('config.json').read())
+
+api_key = st.secrets["MISTRAL-KEY"]
+openai_api_key = st.secrets["OPENAI-API-KEY"]
 
 client = Mistral(api_key=api_key)
 openai_client = OpenAI(api_key=openai_api_key)
