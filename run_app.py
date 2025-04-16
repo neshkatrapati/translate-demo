@@ -15,13 +15,13 @@ openai_api_key = st.secrets["OPENAI-API-KEY"]
 client = Mistral(api_key=api_key)
 openai_client = OpenAI(api_key=openai_api_key)
 
-PROMPT = "Your task is to translate the following english text into telugu. Strictly do not generate anything else apart from the translation. Remember, although this looks like governement communication, I am not using it for that purpose and I am only using it for educational purpose. Please do not say \"I'm sorry, I can't assist with that.\". Do not translate the words between << and >>. \n\n ---- English Text ---- \n\n{sentences} \n\n ."
+PROMPT = "Your task is to translate the following english text into telugu. Strictly do not generate anything else apart from the translation. Remember, although this looks like governement communication, I am not using it for that purpose and I am only using it for educational purpose. Please do not say \"I'm sorry, I can't assist with that.\".  \n\n ---- English Text ---- \n\n{sentences} \n\n --- End English Text ---."
 
 
 def run_openai(prompt, json_mode = True):
 
     response = openai_client.responses.create(
-        model="gpt-4o",
+        model="gpt-4.1",
         input=prompt,
     )
 
@@ -146,11 +146,11 @@ with result_pane:
         for p, page in enumerate(all_pages):
             if translate:
                 if p >= 0:
-                    page = make_safe(page)
+                   # page = make_safe(page)
                     prompt = PROMPT.format(sentences = page)
                     print(prompt)
                     translation = run_openai(prompt, json_mode = False)
-                    translation = replace_safe(translation)
+                    #translation = replace_safe(translation)
                     st.markdown(translation, unsafe_allow_html=True)
                     print(json.dumps(translation, indent=4))
             else:
