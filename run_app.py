@@ -7,6 +7,7 @@ import json
 from openai import OpenAI
 
 
+
 #config = json.loads(open('config.json').read())
 
 api_key = st.secrets["MISTRAL-KEY"]
@@ -94,6 +95,21 @@ def replace_safe(text):
         text = text.replace(phrase, sp_reverse[phrase])
     return text
 
+
+def get_page_chunks(text, chunk_size=5):
+    lines = text.split("\n")
+    num_chunks = len(lines) // chunk_size
+
+    for i in range(num_chunks):
+        rtext =  lines[i * chunk_size:(i + 1) * chunk_size]
+        yield "\n".join(rtext)
+
+    balance = len(lines) - (num_chunks * chunk_size)
+    if balance > 0:
+        rtext = lines[(num_chunks * chunk_size):]
+        yield "\n".join(rtext)
+
+
 st.set_page_config(layout="wide")
 file_pane, result_pane = st.columns(2)
 
@@ -147,11 +163,15 @@ with result_pane:
             if translate:
                 if p >= 0:
                    # page = make_safe(page)
-                    prompt = PROMPT.format(sentences = page)
-                    print(prompt)
-                    translation = run_openai(prompt, json_mode = False)
-                    #translation = replace_safe(translation)
-                    st.markdown(translation, unsafe_allow_html=True)
-                    print(json.dumps(translation, indent=4))
+                    chunks = get_page_chunks(page)
+                    for chunk in chunks:
+                        prompt = PROMPT.format(sentences = chunk)
+                        print(prompt)
+                        translation = run_openai(prompt, json_mode = False)
+                        #translation = replace_safe(translation)
+                        st.markdown(translation, unsafe_allow_html=True)
+                        print(json.dumps(translation, indent=4))
             else:
+
                 st.markdown(page, unsafe_allow_html=True)
+
